@@ -22,6 +22,7 @@ class Movement(QMainWindow):
         self.bulletList1 = []
         self.bulletList2 = []
         self.seaPos = 0
+
         self.lives_left_player1 = 3
         self.lives_left_player2 = 3
         self.player1_score = 0
@@ -46,6 +47,10 @@ class Movement(QMainWindow):
         self.life2_player2 = QPixmap('life2_player2.png')
         self.life1_player2 = QPixmap('life1_player2.png')
         self.label_player2 = QLabel(self)
+
+        self.setGeometry(300, 30, 1024, 768)
+        self.setMinimumSize(1024, 768)
+        self.setMaximumSize(1024, 768)
 
         self.pix1 = QPixmap('player1.png')
         self.pix2 = QPixmap('player2.png')
@@ -277,3 +282,61 @@ class Movement(QMainWindow):
                             self.label1.setVisible(0)
 
         self.update()
+
+            # if rec.intersects(self.label2.geometry()):
+            #    bullet.clear()
+            #    self.bulletList.remove(bullet)
+        self.update()
+
+        for bullet2 in self.bulletList2:
+            rec: QRect = bullet2.geometry()
+            bullet2.setGeometry(rec.x(), rec.y() - 3, rec.width(), rec.height())
+            if rec.y() < -10:
+                bullet2.clear()
+                self.bulletList2.remove(bullet2)
+            # if rec.intersects(self.label1.geometry()):
+            #    bullet.clear()
+            #    self.bulletList.remove(bullet)
+        self.update()
+
+class Menu(QMainWindow):
+
+    def __init__(self, parent=None):
+        QMainWindow.__init__(self, parent)
+
+        self.logo = QPixmap('logo.png')
+        self.label = QLabel(self)
+        self.label.setPixmap(self.logo)
+        self.label.setGeometry(0, 0, 800, 720)
+
+        self.setGeometry(300, 30, 800, 720)
+        self.resize(self.logo.width(), self.logo.height())
+        self.setMinimumSize(self.logo.width(), self.logo.height())
+        self.setMaximumSize(self.logo.width(), self.logo.height())
+        self.setWindowTitle('1942')
+        self.setWindowIcon(QIcon('icon.png'))
+
+        buttonPlay = QPushButton('START GAME', self)
+        buttonPlay.clicked.connect(self.gameWindow)
+        buttonPlay.resize(320, 40)
+        buttonPlay.move(40, 320)
+
+        buttonExit = QPushButton('EXIT', self)
+        buttonExit.clicked.connect(self.exit)
+        buttonExit.resize(320, 40)
+        buttonExit.move(440, 320)
+
+    def gameWindow(self):
+        self.game = Movement(self)
+        self.game.closed.connect(self.show)
+        self.game.show()
+        self.hide()
+
+    def exit(self):
+        self.close()
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = Menu()
+    ex.show()
+    sys.exit(app.exec_())
