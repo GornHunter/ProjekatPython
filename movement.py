@@ -18,6 +18,7 @@ class Movement(QMainWindow):
         self.bulletListP = []
         self.bulletListE = []
         self.enemies = []
+        self.enemies2 = []
         self.seaPos = 0
         self.lives_left_player1 = 3
         self.lives_left_player2 = 3
@@ -219,9 +220,6 @@ class Movement(QMainWindow):
                 bullet.clear()
                 self.bulletListP.remove(bullet)
 
-            #if self.label1.isVisible() == 0 or self.label2.isVisible() == 0:
-             #   pass
-            #else:
             for enemy in self.enemies:
                 if rec.intersects(enemy.label.geometry()):
                     bullet.clear()
@@ -235,22 +233,6 @@ class Movement(QMainWindow):
                         else:
                             self.player2_score += 10
                             self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
-
-                        '''if self.lives_left_player2 == 3:
-                            self.lives_left_player2 -= 1
-                            self.label_player2.clear()
-                            self.label_player2.setPixmap(self.life2_player2)
-                            self.label_player2.setGeometry(30, 840, 79, 31)
-                        elif self.lives_left_player2 == 2:
-                            self.lives_left_player2 -= 1
-                            self.label_player2.clear()
-                            self.label_player2.setPixmap(self.life1_player2)
-                            self.label_player2.setGeometry(30, 840, 37, 33)
-                        else:
-                            self.lives_left_player2 -= 1
-                            self.label_player2.clear()
-                            if self.lives_left_player2 == 0:
-                                self.label2.setVisible(0)'''
 
         for bullet in self.bulletListE:
             rec: QRect = bullet.geometry()
