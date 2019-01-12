@@ -38,7 +38,7 @@ class Movement(QMainWindow):
 
         self.life3_player1 = QPixmap('images/life3_player1.png')
         self.life2_player1 = QPixmap('images/life2_player1.png')
-        self.life1_player1 = QPixmap('life1_player1.png')
+        self.life1_player1 = QPixmap('images/life1_player1.png')
         self.label_player1 = QLabel(self)
 
         self.life3_player2 = QPixmap('images/life3_player2.png')
@@ -277,9 +277,7 @@ class Movement(QMainWindow):
                 bullet.clear()
                 self.bulletListE.remove(bullet)
 
-            '''if self.label1.isVisible() == 0 and self.label2.isVisible() == 0:
-                pass
-            else:
+            if self.label1.isVisible() == True:
                 if rec.intersects(self.label1.geometry()):
                     bullet.clear()
                     self.bulletListE.remove(bullet)
@@ -300,6 +298,7 @@ class Movement(QMainWindow):
                         if self.lives_left_player1 == 0:
                             self.label1.setVisible(0)
 
+            if self.label2.isVisible() == True:
                 if rec.intersects(self.label2.geometry()):
                     bullet.clear()
                     self.bulletListE.remove(bullet)
@@ -318,6 +317,6 @@ class Movement(QMainWindow):
                         self.lives_left_player2 -= 1
                         self.label_player2.clear()
                         if self.lives_left_player2 == 0:
-                            self.label2.setVisible(0)'''
+                            self.label2.setVisible(0)
 
         self.update()

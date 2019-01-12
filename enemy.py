@@ -65,7 +65,7 @@ class Enemy:
             self.bulletCounter -= 1
 
         if self.bulletCounter == 0:
-            self.bulletCounter = 20
+            self.bulletCounter = 200
             temp = QLabel(self.mainWindow)
             temp.setObjectName(" 3")
             rect = self.label.geometry()
