@@ -108,3 +108,5 @@ venv.bak/
 .idea/ProjekatPython.iml
 .idea/workspace.xml
 .idea/
+
+__pycache__/
