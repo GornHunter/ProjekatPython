@@ -6,7 +6,7 @@ class EnemyTwo(Enemy):
         super().__init__(mainWindow)
 
         self.health = 2
-        self.width = 123
-        self.height = 119
+        self.width = 75
+        self.height = 61
         self.speed = 2
         self.label.setPixmap(mainWindow.enemy2)
