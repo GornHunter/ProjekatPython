@@ -12,7 +12,7 @@ class Menu(QMainWindow):
         self.label.setPixmap(self.logo)
         self.label.setGeometry(0, 0, 800, 720)
 
-        self.setGeometry(300, 30, 800, 720)
+        self.setGeometry(550, 150, 800, 720)
         self.resize(self.logo.width(), self.logo.height())
         self.setMinimumSize(self.logo.width(), self.logo.height())
         self.setMaximumSize(self.logo.width(), self.logo.height())

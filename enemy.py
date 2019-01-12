@@ -69,7 +69,7 @@ class Enemy:
             temp = QLabel(self.mainWindow)
             temp.setObjectName(" 3")
             rect = self.label.geometry()
-            temp.setGeometry(rect.x() + rect.width() / 2 - 3, rect.y() + 69, 6, 10)
+            temp.setGeometry(rect.x() + rect.width() / 2 - 18, rect.y() + 69, 6, 10)
             temp.setPixmap(QPixmap('images/bulletE.png'))
             temp.show()
             self.mainWindow.bulletListE.append(temp)

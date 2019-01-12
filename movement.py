@@ -30,9 +30,9 @@ class Movement(QMainWindow):
         self.timer.timeout.connect(self.frame)
         self.timer.start(10)
 
-        self.setGeometry(300, 30, 1024, 768)
-        self.setMinimumSize(1024, 768)
-        self.setMaximumSize(1024, 768)
+        self.setGeometry(450, 70, 1024, 900)
+        self.setMinimumSize(1024, 900)
+        self.setMaximumSize(1024, 900)
 
         self.life3_player1 = QPixmap('images/life3_player1.png')
         self.life2_player1 = QPixmap('images/life2_player1.png')
@@ -71,22 +71,22 @@ class Movement(QMainWindow):
 
     def __init_ui__(self):
         self.label1.setPixmap(self.pix1)
-        self.label1.setGeometry(773, 600, 75, 60)
+        self.label1.setGeometry(873, 760, 75, 60)
 
         self.label2.setPixmap(self.pix2)
-        self.label2.setGeometry(150, 600, 75, 57)
+        self.label2.setGeometry(55, 760, 75, 57)
 
         self.label_player1.setPixmap(self.life3_player1)
-        self.label_player1.setGeometry(874, 674, 150, 33)
+        self.label_player1.setGeometry(850, 835, 150, 33) # 30, 835, 150, 33
 
         self.label_player2.setPixmap(self.life3_player2)
-        self.label_player2.setGeometry(0, 674, 150, 33)
+        self.label_player2.setGeometry(30, 835, 150, 33)
 
-        self.score_player1.setGeometry(848, 24, 150, 33)
-        self.score_player1.setText("1UP: {0}".format(self.player1_score))
+        self.score_player1.setGeometry(874, 3, 200, 100)
+        self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
 
-        self.score_player2.setGeometry(26, 24, 150, 33)
-        self.score_player2.setText("2UP: {0}".format(self.player2_score))
+        self.score_player2.setGeometry(24, 3, 200, 100)
+        self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
 
         self.setWindowTitle('1942')
         self.setWindowIcon(QIcon('images/icon.png'))
@@ -109,7 +109,7 @@ class Movement(QMainWindow):
                 else:
                     self.label1.setGeometry(rec1.x() + self.moveSpeed, rec1.y(), rec1.width(), rec1.height())
         elif key == Qt.Key_Down:
-            if rec1.y() + rec1.height() <= 768:
+            if rec1.y() + rec1.height() <= 900:
                 if self.label1.isVisible() == 0:
                     pass
                 else:
@@ -146,7 +146,7 @@ class Movement(QMainWindow):
                 else:
                     self.label2.setGeometry(rec2.x() + self.moveSpeed, rec2.y(), rec2.width(), rec2.height())
         elif key == Qt.Key_S:
-            if rec2.y() + rec2.height() <= 768:
+            if rec2.y() + rec2.height() <= 900:
                 if self.label2.isVisible() == 0:
                     pass
                 else:
@@ -188,7 +188,7 @@ class Movement(QMainWindow):
         p = QPainter(self)
 
         for i in range(0, 15):
-            for j in range(-1, 10):
+            for j in range(-1, 12):
                 p.drawPixmap(i * self.seaTex.width(), j * self.seaTex.height() + self.seaPos, self.seaTex)
 
     def frame(self):
@@ -206,7 +206,7 @@ class Movement(QMainWindow):
             for i in range(0, 5):
                 self.enemies.append(EnemyOne(self))
                 self.enemies[i].setPosition(i * 150 - 100, -100)
-                self.enemies[i].moveTo(100 + i * 150, 100)
+                self.enemies[i].moveTo(160 + i * 150, 100)
 
         for enemy in self.enemies:
             enemy.update()
@@ -219,22 +219,22 @@ class Movement(QMainWindow):
                 bullet.clear()
                 self.bulletListP.remove(bullet)
 
-            if self.label1.isVisible() == 0 or self.label2.isVisible() == 0:
-                pass
-            else:
-                for enemy in self.enemies:
-                    if rec.intersects(enemy.label.geometry()):
-                        bullet.clear()
-                        self.bulletListP.remove(bullet)
-                        if enemy.hit():
-                            enemy.label.clear()
-                            self.enemies.remove(enemy)
-                            if bullet.objectName() == " 1":
-                                self.player1_score += 100000
-                                self.score_player1.setText("1UP: {0}".format(self.player1_score))
-                            else:
-                                self.player2_score += 10
-                                self.score_player2.setText("2UP: {0}".format(self.player2_score))
+            #if self.label1.isVisible() == 0 or self.label2.isVisible() == 0:
+             #   pass
+            #else:
+            for enemy in self.enemies:
+                if rec.intersects(enemy.label.geometry()):
+                    bullet.clear()
+                    self.bulletListP.remove(bullet)
+                    if enemy.hit():
+                        enemy.label.clear()
+                        self.enemies.remove(enemy)
+                        if bullet.objectName() == " 1":
+                            self.player1_score += 10
+                            self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
+                        else:
+                            self.player2_score += 10
+                            self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
 
                         '''if self.lives_left_player2 == 3:
                             self.lives_left_player2 -= 1
@@ -255,31 +255,51 @@ class Movement(QMainWindow):
         for bullet in self.bulletListE:
             rec: QRect = bullet.geometry()
             bullet.setGeometry(rec.x(), rec.y() + 3, rec.width(), rec.height())
-            if rec.y() > 778:
+            if rec.y() > 910:
                 bullet.clear()
                 self.bulletListE.remove(bullet)
 
-            '''if self.label2.isVisible() == 0:
+            if self.label1.isVisible() == 0 and self.label2.isVisible() == 0:
                 pass
             else:
-                for enemy in self.enemies:
-                    if rec.intersects(enemy.label.geometry()):
-                        bullet.clear()
-                        self.bulletListEnemy.remove(bullet)
-                        if self.lives_left_player2 == 3:
-                            self.lives_left_player2 -= 1
-                            self.label_player2.clear()
-                            self.label_player2.setPixmap(self.life2_player2)
-                            self.label_player2.setGeometry(30, 840, 79, 31)
-                        elif self.lives_left_player2 == 2:
-                            self.lives_left_player2 -= 1
-                            self.label_player2.clear()
-                            self.label_player2.setPixmap(self.life1_player2)
-                            self.label_player2.setGeometry(30, 840, 37, 33)
-                        else:
-                            self.lives_left_player2 -= 1
-                            self.label_player2.clear()
-                            if self.lives_left_player2 == 0:
-                                self.label2.setVisible(0)'''
+                if rec.intersects(self.label1.geometry()):
+                    bullet.clear()
+                    self.bulletListE.remove(bullet)
+
+                    if self.lives_left_player1 == 3:
+                        self.lives_left_player1 -= 1
+                        self.label_player1.clear()
+                        self.label_player1.setPixmap(self.life2_player1)
+                        self.label_player1.setGeometry(850, 835, 84, 33)
+                    elif self.lives_left_player1 == 2:
+                        self.lives_left_player1 -= 1
+                        self.label_player1.clear()
+                        self.label_player1.setPixmap(self.life1_player1)
+                        self.label_player1.setGeometry(850, 835, 37, 33)
+                    else:
+                        self.lives_left_player1 -= 1
+                        self.label_player1.clear()
+                        if self.lives_left_player1 == 0:
+                            self.label1.setVisible(0)
+
+                if rec.intersects(self.label2.geometry()):
+                    bullet.clear()
+                    self.bulletListE.remove(bullet)
+
+                    if self.lives_left_player2 == 3:
+                        self.lives_left_player2 -= 1
+                        self.label_player2.clear()
+                        self.label_player2.setPixmap(self.life2_player2)
+                        self.label_player2.setGeometry(30, 835, 84, 33)
+                    elif self.lives_left_player2 == 2:
+                        self.lives_left_player2 -= 1
+                        self.label_player2.clear()
+                        self.label_player2.setPixmap(self.life1_player2)
+                        self.label_player2.setGeometry(30, 835, 37, 33)
+                    else:
+                        self.lives_left_player2 -= 1
+                        self.label_player2.clear()
+                        if self.lives_left_player2 == 0:
+                            self.label2.setVisible(0)
 
         self.update()
