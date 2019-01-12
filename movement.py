@@ -228,10 +228,6 @@ class Movement(QMainWindow):
             enemy1.update()
             enemy1.fire()
 
-        '''for enemy2 in self.enemies2:
-            enemy2.update()
-            enemy2.fire()'''
-
         for bullet in self.bulletListP:
             rec: QRect = bullet.geometry()
             bullet.setGeometry(rec.x(), rec.y() - 3, rec.width(), rec.height())
@@ -248,10 +244,18 @@ class Movement(QMainWindow):
                         enemy.label.clear()
                         self.enemies.remove(enemy)
                         if bullet.objectName() == " 1":
-                            self.player1_score += 10
+                            if isinstance(enemy, EnemyOne):
+                                self.player1_score += 10
+                            elif isinstance(enemy, EnemyTwo):
+                                self.player1_score += 20
+
                             self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
                         else:
-                            self.player2_score += 10
+                            if isinstance(enemy, EnemyOne):
+                                self.player2_score += 10
+                            elif isinstance(enemy, EnemyTwo):
+                                self.player2_score += 20
+
                             self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
 
                     break
