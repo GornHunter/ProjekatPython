@@ -1,9 +1,11 @@
 from PyQt5.QtCore import Qt, QRect, QTimer, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon, QPainter, QFont
 from PyQt5.QtWidgets import QLabel, QMainWindow
+
 from key_notifier import KeyNotifier
 from enemyone import EnemyOne
 from enemytwo import EnemyTwo
+from enemythree import EnemyThree
 
 
 class Movement(QMainWindow):
@@ -64,6 +66,8 @@ class Movement(QMainWindow):
         self.score_player2.setFont(self.f)
 
         self.seaTex = QPixmap("images/sea.png").scaled(70, 77)
+
+        self.planeCounter = 1
 
         self.__init_ui__()
 
@@ -136,8 +140,8 @@ class Movement(QMainWindow):
                     self.bulletCounter1 = 20
                     temp = QLabel(self)
                     temp.setObjectName(" 1")
-                    temp.setGeometry(rec1.x() + rec1.width() / 2 - 4, rec1.y() - 10, 6, 10)
-                    temp.setPixmap(QPixmap('images/bullet1.png'))
+                    temp.setGeometry(rec1.x() + rec1.width() / 2 - 4, rec1.y() - 10, 10, 15)
+                    temp.setPixmap(QPixmap('images/bullet1.png').scaled(10, 15))
                     temp.show()
                     self.bulletListP.append(temp)
 
@@ -173,8 +177,8 @@ class Movement(QMainWindow):
                     self.bulletCounter2 = 20
                     temp = QLabel(self)
                     temp.setObjectName(" 2")
-                    temp.setGeometry(rec2.x() + rec2.width() / 2 - 4, rec2.y() - 10, 6, 10)
-                    temp.setPixmap(QPixmap('images/bullet2.png'))
+                    temp.setGeometry(rec2.x() + rec2.width() / 2 - 4, rec2.y() - 10, 10, 15)
+                    temp.setPixmap(QPixmap('images/bullet1.png').scaled(10, 15))
                     temp.show()
                     self.bulletListP.append(temp)
 
@@ -205,18 +209,27 @@ class Movement(QMainWindow):
             self.seaPos = 0
 
         if len(self.enemies) == 0:
-            for i in range(0, 5):
+            for i in range(0, self.planeCounter): # random.randint(1, 1)):
                 if self.enemyCounter == 0:
                     self.enemies.append(EnemyOne(self))
+                    self.enemies[i].setPosition(i % 6 * 150 - 200 * i % 6, 100)
+                    self.enemies[i].moveTo(100 + i % 6 * 150, 100 + i // 6 * 100)
                 elif self.enemyCounter == 1:
                     self.enemies.append(EnemyTwo(self))
+                    self.enemies[i].setPosition(i % 6 * 150 + 900, -100)
+                    self.enemies[i].moveTo(100 + i % 6 * 150, 100 + i // 6 * 100)
+                elif self.enemyCounter == 2:
+                    self.enemies.append(EnemyThree(self))
+                    self.enemies[i].setPosition(i % 6 * 150 + 100, -100)
+                    self.enemies[i].moveTo(100 + i % 6 * 150, 100 + i // 6 * 100)
 
-                self.enemies[i].setPosition((5-i) * 150 - 100, -100)
-                self.enemies[i].moveTo(160 + i * 150, 100)
+                # self.enemies[i].setPosition((5-i) * 150 - 100, -100)
+                # self.enemies[i].moveTo(100 + i % 6 * 150, 100 + i // 6 * 100)
 
             self.enemyCounter += 1
-            if self.enemyCounter == 2:
+            if self.enemyCounter == 3:
                 self.enemyCounter = 0
+                self.planeCounter += 1
                 '''if len(self.enemies) == 0:
                     if len(self.enemies2) == 0:
                         for j in range(0, 5):
@@ -248,6 +261,8 @@ class Movement(QMainWindow):
                                 self.player1_score += 10
                             elif isinstance(enemy, EnemyTwo):
                                 self.player1_score += 20
+                            elif isinstance(enemy, EnemyThree):
+                                self.player1_score += 30
 
                             self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
                         else:
@@ -255,6 +270,8 @@ class Movement(QMainWindow):
                                 self.player2_score += 10
                             elif isinstance(enemy, EnemyTwo):
                                 self.player2_score += 20
+                            elif isinstance(enemy, EnemyThree):
+                                self.player2_score += 30
 
                             self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
 
@@ -276,13 +293,17 @@ class Movement(QMainWindow):
 
         for bullet in self.bulletListE:
             rec: QRect = bullet.geometry()
+            player1: QRect = self.label1.geometry()
+            player1.setCoords(player1.x() + 30, player1.y(), player1.x() + 45, player1.y() + 60)
+            player2: QRect = self.label2.geometry()
+            player2.setCoords(player2.x() + 30, player2.y(), player2.x() + 45, player2.y() + 60)
             bullet.setGeometry(rec.x(), rec.y() + 3, rec.width(), rec.height())
             if rec.y() > 910:
                 bullet.clear()
                 self.bulletListE.remove(bullet)
 
             if self.label1.isVisible() == True:
-                if rec.intersects(self.label1.geometry()):
+                if rec.intersects(player1):
                     bullet.clear()
                     self.bulletListE.remove(bullet)
 
@@ -303,7 +324,7 @@ class Movement(QMainWindow):
                             self.label1.setVisible(0)
 
             if self.label2.isVisible() == True:
-                if rec.intersects(self.label2.geometry()):
+                if rec.intersects(player2):
                     bullet.clear()
                     self.bulletListE.remove(bullet)
 

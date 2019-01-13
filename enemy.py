@@ -1,4 +1,5 @@
 from movement import *
+import random
 
 
 class Enemy:
@@ -65,11 +66,11 @@ class Enemy:
             self.bulletCounter -= 1
 
         if self.bulletCounter == 0:
-            self.bulletCounter = 200
+            self.bulletCounter = random.randint(30, 150) # 200
             temp = QLabel(self.mainWindow)
             temp.setObjectName(" 3")
             rect = self.label.geometry()
-            temp.setGeometry(rect.x() + rect.width() / 2 - 3, rect.y() + 69, 6, 10)
-            temp.setPixmap(QPixmap('images/bulletE.png'))
+            temp.setGeometry(rect.x() + rect.width() / 2 - 3, rect.y() + 69, 10, 15)
+            temp.setPixmap(QPixmap('images/bullet2.png').scaled(10, 15))
             temp.show()
             self.mainWindow.bulletListE.append(temp)

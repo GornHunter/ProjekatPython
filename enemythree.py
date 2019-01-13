@@ -6,7 +6,7 @@ class EnemyThree(Enemy):
         super().__init__(mainWindow)
 
         self.health = 3
-        self.width = 225
-        self.height = 125
+        self.width = 150
+        self.height = 83
         self.speed = 2
         self.label.setPixmap(mainWindow.enemy3)
