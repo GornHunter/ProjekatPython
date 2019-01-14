@@ -45,7 +45,7 @@ class Movement(QMainWindow):
         self.setMinimumSize(1024, 900)
         self.setMaximumSize(1024, 900)
 
-        self.randomForce = QPixmap('images/bullet1.png').scaled(15, 25)
+        self.randomForce = QPixmap('images/srcko.png')
         self.DeusExMachina = QLabel(self)
 
         self.life3_player1 = QPixmap('images/life3_player1.png')
@@ -103,7 +103,7 @@ class Movement(QMainWindow):
         self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
 
         self.DeusExMachina.setPixmap(self.randomForce)
-        self.DeusExMachina.setGeometry(random.randint(124, 900), random.randint(450, 874), 12, 25)
+        self.DeusExMachina.setGeometry(random.randint(124, 900), random.randint(450, 839), 71, 60)
 
         self.thread = threading.Thread(target=self.justDoIt, args=())
         self.thread.daemon = True
@@ -153,7 +153,7 @@ class Movement(QMainWindow):
             if self.DeusExMachina.isVisible() == False:
                 time.sleep(0.1)
                 self.DeusExMachina.setVisible(1)
-                self.DeusExMachina.setGeometry(random.randint(124, 900), random.randint(450, 874), 12, 25)
+                self.DeusExMachina.setGeometry(random.randint(124, 900), random.randint(450, 839), 71, 60)
                 
             time.sleep(0.01)
 
