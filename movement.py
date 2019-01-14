@@ -17,9 +17,8 @@ class Movement(QMainWindow):
     player1_text = pyqtSignal(str)
     player2_text = pyqtSignal(str)
     hide_Deus = pyqtSignal()
-    set_DeusGeometry = pyqtSignal(int, int, int, int)
-    add = pyqtSignal(int)
-    subtract = pyqtSignal(int)
+    setVisible_Deus = pyqtSignal(int, int, int, int)
+    geometry_Deus = pyqtSignal(int, int, int, int)
 
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
@@ -49,16 +48,15 @@ class Movement(QMainWindow):
 
         self.player1_text.connect(self.text_player1)
         self.player2_text.connect(self.text_player2)
-        self.hide_Deus.connect(self.Deus_hide)
-        self.set_DeusGeometry.connect(self.DeusGeometry_Set)
-        self.add.connect(self.add_s)
-        self.subtract.connect(self.subtract_s)
+        self.hide_Deus.connect(self.deus_hide)
+        self.setVisible_Deus.connect(self.deus_SetVisible)
+        self.geometry_Deus.connect(self.deus_Geometry)
 
         self.setGeometry(450, 70, 1024, 900)
         self.setMinimumSize(1024, 900)
         self.setMaximumSize(1024, 900)
 
-        self.randomForce = QPixmap('images/srcko.png')
+        self.randomForce = QPixmap('images/srcko.png').scaled(50, 45)
         self.DeusExMachina = QLabel(self)
 
         self.life3_player1 = QPixmap('images/life3_player1.png')
@@ -90,6 +88,9 @@ class Movement(QMainWindow):
 
         self.seaTex = QPixmap("images/sea.png").scaled(70, 77)
 
+        self.gameOver = QPixmap('images/gameOver.jpg').scaled(1024, 900)
+        self.gameOverLabel = QLabel(self)
+
         self.__init_ui__()
 
         self.key_notifier = KeyNotifier()
@@ -116,7 +117,7 @@ class Movement(QMainWindow):
         self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
 
         self.DeusExMachina.setPixmap(self.randomForce)
-        self.DeusExMachina.setGeometry(random.randint(124, 900), random.randint(450, 839), 71, 60)
+        self.DeusExMachina.setGeometry(random.randint(124, 900), random.randint(450, 859), 50, 45)
 
         self.thread = threading.Thread(target=self.justDoIt, args=())
         self.thread.daemon = True
@@ -126,31 +127,27 @@ class Movement(QMainWindow):
         self.setWindowIcon(QIcon('images/icon.png'))
         self.show()
 
-    @pyqtSlot(int, str)
+    @pyqtSlot(str)
     def text_player1(self, text):
         self.score_player1.setText(text)
 
-    @pyqtSlot(int, str)
+    @pyqtSlot(str)
     def text_player2(self, text):
         self.score_player2.setText(text)
 
     @pyqtSlot()
-    def Deus_hide(self):
+    def deus_hide(self):
         self.DeusExMachina.hide()
         self.DeusExMachina.setVisible(0)
 
     @pyqtSlot(int, int, int, int)
-    def DeusGeometry_Set(self, x, y, w, h):
+    def deus_SetVisible(self, x, y, w, h):
         self.DeusExMachina.setVisible(1)
         self.DeusExMachina.setGeometry(x, y, w, h)
 
-    @pyqtSlot(int)
-    def add_s(self, val):
-        self.player1_score += val
-
-    @pyqtSlot(int)
-    def subtract_s(self, val):
-        self.player1_score -= val
+    @pyqtSlot(int, int, int, int)
+    def deus_Geometry(self, x, y, w, h):
+        self.DeusExMachina.setGeometry(x, y, w, h)
 
     def justDoIt(self):
         while True:
@@ -158,38 +155,45 @@ class Movement(QMainWindow):
             player1.setCoords(player1.x() + 30, player1.y(), player1.x() + 45, player1.y() + 60)
             player2: QRect = self.label2.geometry()
             player2.setCoords(player2.x() + 30, player2.y(), player2.x() + 45, player2.y() + 60)
+            startTime = time.time()
             randomForce: QRect = self.DeusExMachina.geometry()
             choice = random.randint(0, 1)
 
             if player1.intersects(randomForce):
                 if self.DeusExMachina.isVisible() == True:
                     self.hide_Deus.emit()
-                    # time.sleep(self.interval)
                     if choice == 0:
-                        self.add.emit(100)
+                        self.player1_score += 100
                         self.player1_text.emit(" 1UP\n {0}".format(self.player1_score))
                     else:
-                        self.subtract.emit(100)
+                        self.player1_score -= 100
                         self.player1_text.emit(" 1UP\n {0}".format(self.player1_score))
+
+                    time.sleep(self.interval)
                 else:
                     pass
 
             if player2.intersects(randomForce):
                 if self.DeusExMachina.isVisible() == True:
                     self.hide_Deus.emit()
-                    # time.sleep(self.interval)
                     if choice == 0:
-                        self.add.emit(100)
+                        self.player2_score += 100
                         self.player2_text.emit(" 2UP\n {0}".format(self.player2_score))
                     else:
-                        self.subtract.emit(100)
+                        self.player2_score -= 100
                         self.player2_text.emit(" 2UP\n {0}".format(self.player2_score))
+
+                    time.sleep(self.interval)
                 else:
                     pass
 
             if self.DeusExMachina.isVisible() == False:
-                time.sleep(0.1)
-                self.set_DeusGeometry.emit(random.randint(124, 900), random.randint(450, 839), 71, 60)
+                self.setVisible_Deus.emit(random.randint(124, 900), random.randint(450, 859), 50, 45)
+            else:
+                self.elapsedTime = time.time() - startTime
+                if self.elapsedTime > 3:
+                    self.geometry_Deus.emit(random.randint(124, 900), random.randint(450, 859), 50, 45)
+                    self.elapsedTime = startTime
                 
             time.sleep(0.01)
 
@@ -365,7 +369,6 @@ class Movement(QMainWindow):
 
         for bullet in self.bulletListE:
             rec: QRect = bullet.geometry()
-            randomForce: QRect = self.DeusExMachina.geometry()
             player1: QRect = self.label1.geometry()
             player1.setCoords(player1.x() + 30, player1.y(), player1.x() + 45, player1.y() + 60)
             player2: QRect = self.label2.geometry()
@@ -374,24 +377,6 @@ class Movement(QMainWindow):
             if rec.y() > 910:
                 bullet.clear()
                 self.bulletListE.remove(bullet)
-
-            '''if player1.intersects(randomForce):
-                if self.DeusExMachina.isVisible() == True:
-                    self.player1_score += 100
-                    self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
-                    self.DeusExMachina.hide()
-                    self.DeusExMachina.setVisible(0)
-                else:
-                    pass
-
-            if player2.intersects(randomForce):
-                if self.DeusExMachina.isVisible() == True:
-                    self.player2_score += 100
-                    self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
-                    self.DeusExMachina.hide()
-                    self.DeusExMachina.setVisible(0)
-                else:
-                    pass'''
 
             if self.label1.isVisible() == True:
                 if rec.intersects(player1):
@@ -434,5 +419,22 @@ class Movement(QMainWindow):
                         self.label_player2.clear()
                         if self.lives_left_player2 == 0:
                             self.label2.setVisible(0)
+
+        if self.label1.isVisible() == False and self.label2.isVisible() == False:
+            self.timer.stop()
+            self.gameOverLabel.setPixmap(self.gameOver)
+            self.gameOverLabel.setGeometry(0, 0, 1024, 900)
+            if self.player1_score > self.player2_score:
+                text_file = open("player1.txt", "a")
+                text_file.write("\nPlayer1 score: %i\n-------------------------" % self.player1_score)
+                text_file.close()
+            elif self.player1_score < self.player2_score:
+                text_file = open("player2.txt", "a")
+                text_file.write("\nPlayer2 score: %i\n-------------------------" % self.player2_score)
+                text_file.close()
+            else:
+                text_file = open("playerTied.txt", "a")
+                text_file.write("\nPlayer1 score: %i\nPlayer2 score: %i\n---------------------------" % (self.player1_score, self.player2_score))
+                text_file.close()
 
         self.update()
