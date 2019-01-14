@@ -120,16 +120,19 @@ class Movement(QMainWindow):
             player2: QRect = self.label2.geometry()
             player2.setCoords(player2.x() + 30, player2.y(), player2.x() + 45, player2.y() + 60)
             randomForce: QRect = self.DeusExMachina.geometry()
+            choice = random.randint(0,1)
 
-            # time.sleep(self.interval)
-            # self.DeusExMachina.setVisible(1)
             if player1.intersects(randomForce):
                 if self.DeusExMachina.isVisible() == True:
                     self.DeusExMachina.hide()
                     self.DeusExMachina.setVisible(0)
                     time.sleep(self.interval)
-                    self.player1_score += 100
-                    self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
+                    if choice == 0:
+                        self.player1_score += 100
+                        self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
+                    else:
+                        self.player1_score -= 100
+                        self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
                 else:
                     pass
 
@@ -138,8 +141,12 @@ class Movement(QMainWindow):
                     self.DeusExMachina.hide()
                     self.DeusExMachina.setVisible(0)
                     time.sleep(self.interval)
-                    self.player2_score += 100
-                    self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
+                    if choice == 0:
+                        self.player2_score += 100
+                        self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
+                    else:
+                        self.player2_score -= 100
+                        self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
                 else:
                     pass
 
