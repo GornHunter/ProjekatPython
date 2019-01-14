@@ -150,12 +150,13 @@ class Movement(QMainWindow):
         self.DeusExMachina.setGeometry(x, y, w, h)
 
     def justDoIt(self):
+        self.startTime = time.time()
         while True:
             player1: QRect = self.label1.geometry()
             player1.setCoords(player1.x() + 30, player1.y(), player1.x() + 45, player1.y() + 60)
             player2: QRect = self.label2.geometry()
             player2.setCoords(player2.x() + 30, player2.y(), player2.x() + 45, player2.y() + 60)
-            startTime = time.time()
+            # self.startTime = time.time()
             randomForce: QRect = self.DeusExMachina.geometry()
             choice = random.randint(0, 1)
 
@@ -189,11 +190,11 @@ class Movement(QMainWindow):
 
             if self.DeusExMachina.isVisible() == False:
                 self.setVisible_Deus.emit(random.randint(124, 900), random.randint(450, 859), 50, 45)
+                self.startTime = time.time()
             else:
-                self.elapsedTime = time.time() - startTime
+                self.elapsedTime = time.time() - self.startTime
                 if self.elapsedTime > 3:
-                    self.geometry_Deus.emit(random.randint(124, 900), random.randint(450, 859), 50, 45)
-                    self.elapsedTime = startTime
+                    self.hide_Deus.emit()
                 
             time.sleep(0.01)
 
