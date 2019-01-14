@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt, QRect, QTimer, pyqtSignal
+from PyQt5.QtCore import Qt, QRect, QTimer, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QPixmap, QIcon, QPainter, QFont
 from PyQt5.QtWidgets import QLabel, QMainWindow
 
@@ -14,6 +14,12 @@ import random
 
 class Movement(QMainWindow):
     closed = pyqtSignal()
+    player1_text = pyqtSignal(str)
+    player2_text = pyqtSignal(str)
+    hide_Deus = pyqtSignal()
+    set_DeusGeometry = pyqtSignal(int, int, int, int)
+    add = pyqtSignal(int)
+    subtract = pyqtSignal(int)
 
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
@@ -40,6 +46,13 @@ class Movement(QMainWindow):
         self.timer.setInterval(10)
         self.timer.timeout.connect(self.frame)
         self.timer.start(10)
+
+        self.player1_text.connect(self.text_player1)
+        self.player2_text.connect(self.text_player2)
+        self.hide_Deus.connect(self.Deus_hide)
+        self.set_DeusGeometry.connect(self.DeusGeometry_Set)
+        self.add.connect(self.add_s)
+        self.subtract.connect(self.subtract_s)
 
         self.setGeometry(450, 70, 1024, 900)
         self.setMinimumSize(1024, 900)
@@ -113,6 +126,32 @@ class Movement(QMainWindow):
         self.setWindowIcon(QIcon('images/icon.png'))
         self.show()
 
+    @pyqtSlot(int, str)
+    def text_player1(self, text):
+        self.score_player1.setText(text)
+
+    @pyqtSlot(int, str)
+    def text_player2(self, text):
+        self.score_player2.setText(text)
+
+    @pyqtSlot()
+    def Deus_hide(self):
+        self.DeusExMachina.hide()
+        self.DeusExMachina.setVisible(0)
+
+    @pyqtSlot(int, int, int, int)
+    def DeusGeometry_Set(self, x, y, w, h):
+        self.DeusExMachina.setVisible(1)
+        self.DeusExMachina.setGeometry(x, y, w, h)
+
+    @pyqtSlot(int)
+    def add_s(self, val):
+        self.player1_score += val
+
+    @pyqtSlot(int)
+    def subtract_s(self, val):
+        self.player1_score -= val
+
     def justDoIt(self):
         while True:
             player1: QRect = self.label1.geometry()
@@ -124,36 +163,33 @@ class Movement(QMainWindow):
 
             if player1.intersects(randomForce):
                 if self.DeusExMachina.isVisible() == True:
-                    self.DeusExMachina.hide()
-                    self.DeusExMachina.setVisible(0)
+                    self.hide_Deus.emit()
                     # time.sleep(self.interval)
                     if choice == 0:
-                        self.player1_score += 100
-                        self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
+                        self.add.emit(100)
+                        self.player1_text.emit(" 1UP\n {0}".format(self.player1_score))
                     else:
-                        self.player1_score -= 100
-                        self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
+                        self.subtract.emit(100)
+                        self.player1_text.emit(" 1UP\n {0}".format(self.player1_score))
                 else:
                     pass
 
             if player2.intersects(randomForce):
                 if self.DeusExMachina.isVisible() == True:
-                    self.DeusExMachina.hide()
-                    self.DeusExMachina.setVisible(0)
+                    self.hide_Deus.emit()
                     # time.sleep(self.interval)
                     if choice == 0:
-                        self.player2_score += 100
-                        self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
+                        self.add.emit(100)
+                        self.player2_text.emit(" 2UP\n {0}".format(self.player2_score))
                     else:
-                        self.player2_score -= 100
-                        self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
+                        self.subtract.emit(100)
+                        self.player2_text.emit(" 2UP\n {0}".format(self.player2_score))
                 else:
                     pass
 
             if self.DeusExMachina.isVisible() == False:
                 time.sleep(0.1)
-                self.DeusExMachina.setVisible(1)
-                self.DeusExMachina.setGeometry(random.randint(124, 900), random.randint(450, 839), 71, 60)
+                self.set_DeusGeometry.emit(random.randint(124, 900), random.randint(450, 839), 71, 60)
                 
             time.sleep(0.01)
 
