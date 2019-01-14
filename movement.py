@@ -120,13 +120,13 @@ class Movement(QMainWindow):
             player2: QRect = self.label2.geometry()
             player2.setCoords(player2.x() + 30, player2.y(), player2.x() + 45, player2.y() + 60)
             randomForce: QRect = self.DeusExMachina.geometry()
-            choice = random.randint(0,1)
+            choice = random.randint(0, 1)
 
             if player1.intersects(randomForce):
                 if self.DeusExMachina.isVisible() == True:
                     self.DeusExMachina.hide()
                     self.DeusExMachina.setVisible(0)
-                    time.sleep(self.interval)
+                    # time.sleep(self.interval)
                     if choice == 0:
                         self.player1_score += 100
                         self.score_player1.setText(" 1UP\n {0}".format(self.player1_score))
@@ -140,7 +140,7 @@ class Movement(QMainWindow):
                 if self.DeusExMachina.isVisible() == True:
                     self.DeusExMachina.hide()
                     self.DeusExMachina.setVisible(0)
-                    time.sleep(self.interval)
+                    # time.sleep(self.interval)
                     if choice == 0:
                         self.player2_score += 100
                         self.score_player2.setText(" 2UP\n {0}".format(self.player2_score))
@@ -154,6 +154,8 @@ class Movement(QMainWindow):
                 time.sleep(0.1)
                 self.DeusExMachina.setVisible(1)
                 self.DeusExMachina.setGeometry(random.randint(124, 900), random.randint(450, 874), 12, 25)
+                
+            time.sleep(0.01)
 
     def keyPressEvent(self, event):
         self.key_notifier.add_key(event.key())
